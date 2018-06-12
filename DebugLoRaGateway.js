@@ -27,8 +27,6 @@ server.on('message', function (message, remote) {
 		index = str.indexOf('stat');
 		let str_status = str.slice(index-2).toString();
 		myString += "\n" + beautify(str_status) ;
-		let json_status = JSON.parse(str_status);
-		myString += "\n" + json_status.stat.lati;
 	}
 	else
 	{
