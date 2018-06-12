@@ -1,7 +1,7 @@
 {
-  "name": "test",
+  "name": "DebugLoRaGateway",
   "version": "1.0.0",
-  "description": "",
+  "description": "Visualize UPD frame which will be transmit to the LoRaWan server with a node js server",
   "main": "DebugLoRaGateway.js",
   "dependencies": {
     "js-beautify": "^1.7.5"
@@ -10,6 +10,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Antonn Héréson",
+  "author": "Antonin Héréson",
   "license": ""
 }
