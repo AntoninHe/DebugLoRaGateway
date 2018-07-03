@@ -4,7 +4,8 @@
   "description": "Visualize UPD frame which will be transmit to the LoRaWan server with a node js server",
   "main": "DebugLoRaGateway.js",
   "dependencies": {
-    "js-beautify": "^1.7.5"
+    "js-beautify": "^1.7.5",
+    "lora-packet": "^0.7.5"
   },
   "devDependencies": {},
   "scripts": {
