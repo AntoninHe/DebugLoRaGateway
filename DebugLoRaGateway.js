@@ -34,7 +34,12 @@ server.on('message', function (message, remote) {
 		let json_status = JSON.parse(str_status);
 		myString += "\n" + beautify(str_status) + "\n";
 		let data = new Buffer(json_status.rxpk[0].data, 'base64');  
-		myString += "\n decoded data : " + data.toString('ascii') + "\n";
+
+                var NwkSKey = new Buffer('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'hex');
+                var AppSKey = new Buffer('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'hex');
+                var packet = lora_packet.fromWire(new Buffer.from(data, 'base64'));
+
+                myString += "\n\t" + "Decrypted (ASCII)='" + lora_packet.decrypt(packet, AppSKey, NwkSKey).toString() + "'" + "\n";
 	}
 
 
