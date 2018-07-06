@@ -11,6 +11,20 @@ const tsFormat = () => (new Date()).toLocaleTimeString();
 
 let server = dgram.createSocket('udp4');
 
+let NwkSKey;
+    fs.readFile('NwkSKey.txt', 'utf8' , (err, data) => {
+        if (err) throw err;
+        NwkSKey = new Buffer(data , 'hex');
+    });
+
+let AppSKey;
+    fs.readFile('AppSKey.txt', 'utf8' , (err, data) => {
+        if (err) throw err;
+        AppSKey = new Buffer(data , 'hex');
+    });
+
+
+
 server.on('listening', function () {
 	let address = server.address();
 	console.log('UDP Server listening on ' + address.address + ":" + address.port);
@@ -36,18 +50,6 @@ server.on('message', function (message, remote) {
             let json_status = JSON.parse(str_status);
             myString += "\n" + beautify(str_status) + "\n";
             let data = new Buffer(json_status.rxpk[0].data, 'base64');  
-
-            let NwkSKey;
-            fs.readFile('NwkSKey.txt', 'utf8' , (err, data) => {
-                if (err) throw err;
-                NwkSKey = new Buffer(data , 'hex');
-            });
-
-            let AppSKey;
-            fs.readFile('AppSKey.txt', 'utf8' , (err, data) => {
-                if (err) throw err;
-                AppSKey = new Buffer(data , 'hex');
-            }
 
             let packet = lora_packet.fromWire(new Buffer.from(data, 'base64'));
 
