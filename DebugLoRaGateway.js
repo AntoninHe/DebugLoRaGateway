@@ -4,6 +4,8 @@ let HOST = '0.0.0.0';
 
 let dgram = require('dgram');
 let beautify = require('js-beautify').js;
+let lora_packet = require('lora-packet');
+let fs = require('fs');
 
 const tsFormat = () => (new Date()).toLocaleTimeString();
 
@@ -30,16 +32,26 @@ server.on('message', function (message, remote) {
 	}
 	else
 	{
-		let str_status = str.slice(index-2).toString();
-		let json_status = JSON.parse(str_status);
-		myString += "\n" + beautify(str_status) + "\n";
-		let data = new Buffer(json_status.rxpk[0].data, 'base64');  
+            let str_status = str.slice(index-2).toString();
+            let json_status = JSON.parse(str_status);
+            myString += "\n" + beautify(str_status) + "\n";
+            let data = new Buffer(json_status.rxpk[0].data, 'base64');  
 
-                var NwkSKey = new Buffer('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'hex');
-                var AppSKey = new Buffer('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'hex');
-                var packet = lora_packet.fromWire(new Buffer.from(data, 'base64'));
+            let NwkSKey;
+            fs.readFile('NwkSKey.txt', 'utf8' , (err, data) => {
+                if (err) throw err;
+                NwkSKey = new Buffer(data , 'hex');
+            });
 
-                myString += "\n\t" + "Decrypted (ASCII)='" + lora_packet.decrypt(packet, AppSKey, NwkSKey).toString() + "'" + "\n";
+            let AppSKey;
+            fs.readFile('AppSKey.txt', 'utf8' , (err, data) => {
+                if (err) throw err;
+                AppSKey = new Buffer(data , 'hex');
+            }
+
+            let packet = lora_packet.fromWire(new Buffer.from(data, 'base64'));
+
+            myString += "\n\t" + "Decrypted (ASCII)='" + lora_packet.decrypt(packet, AppSKey, NwkSKey).toString() + "'" + "\n";
 	}
 
 
