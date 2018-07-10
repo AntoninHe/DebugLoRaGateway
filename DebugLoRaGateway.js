@@ -71,7 +71,6 @@ server.on('message', function (message, remote) {
 let NwkSKey ;
 let AppSKey ;
 async.map(['NwkSKey.txt','AppSKey.txt'], async (item) => {
-        console.log(item);
         try {
             const data = await readFileP(item,'utf8')
             return new Buffer(data , 'hex');
