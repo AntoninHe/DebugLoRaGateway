@@ -1,29 +1,22 @@
-//'use strict';
+'use strict';
 let PORT = 1700;
 let HOST = '0.0.0.0';
 
-let dgram = require('dgram');
-let beautify = require('js-beautify').js;
-let lora_packet = require('lora-packet');
-let fs = require('fs');
+let stateKey = 1;
+
+const dgram = require('dgram');
+const beautify = require('js-beautify').js;
+const lora_packet = require('lora-packet');
+
+const fs = require('fs');
+const async = require('async');
+
+const promisify = require('util').promisify;
+const readFileP = promisify(fs.readFile);
 
 const tsFormat = () => (new Date()).toLocaleTimeString();
 
 let server = dgram.createSocket('udp4');
-
-let NwkSKey;
-    fs.readFile('NwkSKey.txt', 'utf8' , (err, data) => {
-        if (err) throw err;
-        NwkSKey = new Buffer(data , 'hex');
-    });
-
-let AppSKey;
-    fs.readFile('AppSKey.txt', 'utf8' , (err, data) => {
-        if (err) throw err;
-        AppSKey = new Buffer(data , 'hex');
-    });
-
-
 
 server.on('listening', function () {
 	let address = server.address();
@@ -51,6 +44,7 @@ server.on('message', function (message, remote) {
             myString += "\n" + beautify(str_status) + "\n";
             let data = new Buffer(json_status.rxpk[0].data, 'base64');  
 
+
             let packet = lora_packet.fromWire(new Buffer.from(data, 'base64'));
 
             myString += "\n\t" + "Decrypted (ASCII)='" + lora_packet.decrypt(packet, AppSKey, NwkSKey).toString() + "'" + "\n";
@@ -68,4 +62,25 @@ server.on('message', function (message, remote) {
 	i++;
 });
 
-server.bind(PORT, HOST);
+      function sleep(delay) {
+        var start = new Date().getTime();
+        while (new Date().getTime() < start + delay);
+      }
+
+
+let NwkSKey ;
+let AppSKey ;
+async.map(['NwkSKey.txt','AppSKey.txt'], async (item) => {
+        console.log(item);
+        try {
+            const data = await readFileP(item,'utf8')
+            return new Buffer(data , 'hex');
+        } catch (err) {
+            console.log('Maybe no file');
+            throw err
+        }
+    }, (err, results) => {
+        if (err) throw err
+        [NwkSKey,AppSKey] = results;
+        server.bind(PORT, HOST);
+})
