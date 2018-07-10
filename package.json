@@ -1,7 +1,7 @@
 {
-  "name": "test",
+  "name": "DebugLoRaGateway",
   "version": "1.0.0",
-  "description": "",
+  "description": "Server for LoraWan packet forwarder debuging",
   "main": "DebugLoRaGateway.js",
   "dependencies": {
     "async": "^2.6.1",
