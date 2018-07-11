@@ -70,6 +70,12 @@ async function finishInit (){
         console.error('--- Maybe no file ? ---\n');
         throw err
     }
+
+    console.log(AppSKey.length)
+    NwkSKey = new Buffer(NwkSKey,'hex');
+    AppSKey = new Buffer(AppSKey,'hex');
+    console.log(AppSKey)
+
     console.log('Key loaded');
     server.bind(PORT, HOST);
 }
