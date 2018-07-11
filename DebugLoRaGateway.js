@@ -60,12 +60,6 @@ server.on('message', function (message, remote) {
 	i++;
 });
 
-function sleep(delay) { // for testing purpose
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
-}
-
-
 let NwkSKey ;
 let AppSKey ;
 async function finishInit (){
