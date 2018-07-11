@@ -69,7 +69,7 @@ async function finishInit (){
             readFileP('AppSKey.txt','utf8')
             ])
     } catch (err) {
-        console.log('Maybe no file');
+        console.error('--- Maybe no file ? ---\n');
         throw err
     }
     console.log('Key loaded');
