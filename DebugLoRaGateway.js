@@ -2,8 +2,6 @@
 let PORT = 1700;
 let HOST = '0.0.0.0';
 
-let stateKey = 1;
-
 const dgram = require('dgram');
 const beautify = require('js-beautify').js;
 const lora_packet = require('lora-packet');
