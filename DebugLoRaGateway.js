@@ -9,14 +9,12 @@ const beautify = require('js-beautify').js;
 const lora_packet = require('lora-packet');
 
 const fs = require('fs');
-const async = require('async');
-
 const promisify = require('util').promisify;
 const readFileP = promisify(fs.readFile);
 
 const tsFormat = () => (new Date()).toLocaleTimeString();
 
-let server = dgram.createSocket('udp4');
+const server = dgram.createSocket('udp4');
 
 server.on('listening', function () {
 	let address = server.address();
@@ -62,24 +60,25 @@ server.on('message', function (message, remote) {
 	i++;
 });
 
-      function sleep(delay) {
-        var start = new Date().getTime();
-        while (new Date().getTime() < start + delay);
-      }
+function sleep(delay) { // for testing purpose
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+}
 
 
 let NwkSKey ;
 let AppSKey ;
-async.map(['NwkSKey.txt','AppSKey.txt'], async (item) => {
-        try {
-            const data = await readFileP(item,'utf8')
-            return new Buffer(data , 'hex');
-        } catch (err) {
-            console.log('Maybe no file');
-            throw err
-        }
-    }, (err, results) => {
-        if (err) throw err
-        [NwkSKey,AppSKey] = results;
-        server.bind(PORT, HOST);
-})
+async function finishInit (){
+    try {
+        [NwkSKey,AppSKey] = await Promise.all([
+            readFileP('NwkSKey.txt','utf8'),
+            readFileP('AppSKey.txt','utf8')
+            ])
+    } catch (err) {
+        console.log('Maybe no file');
+        throw err
+    }
+    console.log('Key loaded');
+    server.bind(PORT, HOST);
+}
+finishInit();
