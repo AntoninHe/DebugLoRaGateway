@@ -71,10 +71,8 @@ async function finishInit (){
         throw err
     }
 
-    console.log(AppSKey.length)
     NwkSKey = new Buffer(NwkSKey,'hex');
     AppSKey = new Buffer(AppSKey,'hex');
-    console.log(AppSKey)
 
     console.log('Key loaded');
     server.bind(PORT, HOST);
